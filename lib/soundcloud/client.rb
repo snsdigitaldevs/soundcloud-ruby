@@ -2,7 +2,7 @@ require 'soundcloud/version'
 
 module SoundCloud
   class Client
-    include HTTMultiParty
+    include HTTParty
     USER_AGENT            = "SoundCloud Ruby Wrapper #{SoundCloud::VERSION}"
     CLIENT_ID_PARAM_NAME  = :client_id
     API_SUBHOST           = 'api'
@@ -129,7 +129,7 @@ module SoundCloud
       end
       params.merge!(client_params)
       response = handle_response(false) {
-        self.class.post("https://#{api_host}#{TOKEN_PATH}", :query => params)
+        self.class.post("https://#{api_host}#{TOKEN_PATH}", :body => params)
       }
       @options.merge!(:access_token => response.access_token, :refresh_token => response.refresh_token)
       @options[:expires_at] = Time.now + response.expires_in if response.expires_in
